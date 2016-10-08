@@ -14,6 +14,7 @@ public class Pacman {
     private int currentDirection;
     private int nextDirection;
 	Maze maze;
+	static int Score = 0;
     
     public Pacman(int x, int y, Maze maze) {
         position = new Vector2(x,y);
@@ -55,7 +56,12 @@ public class Pacman {
     public void update() {
     	if(isAtCenter()) {
             if(canMoveInDirection(nextDirection)) {
-                currentDirection = nextDirection;    
+                currentDirection = nextDirection;
+                if(maze.hasDotAt(getRow(), getColumn())){                	
+                	maze.removeDotAt(getRow(), getColumn());
+                	Score++;
+                	System.out.println(Score);
+                }
             } else {
                 currentDirection = DIRECTION_STILL;    
             }
