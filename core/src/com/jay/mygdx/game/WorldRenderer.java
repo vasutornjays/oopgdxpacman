@@ -12,6 +12,7 @@ public class WorldRenderer {
 	private PacmanGame pacmanGame;
 	private Pacman pacman;
 	private Texture pacmanImg;
+	private MazeRenderer mazeRenderer;
 	
 	public WorldRenderer(PacmanGame pacmanGame, World world) {
 		SpriteBatch batch = pacmanGame.batch;
@@ -19,6 +20,7 @@ public class WorldRenderer {
         batch = pacmanGame.batch;
         pacman = world.getPacman(); 
         this.world = world;
+        mazeRenderer = new MazeRenderer(pacmanGame.batch, world.getMaze());
         pacmanImg = new Texture("pacman.png");
     }
 	
@@ -26,6 +28,7 @@ public class WorldRenderer {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     	SpriteBatch batch = pacmanGame.batch;
+    	mazeRenderer.render();
         batch.begin();
         Vector2 pos = pacman.getPosition();
         batch.draw(pacmanImg, pos.x, pos.y);
