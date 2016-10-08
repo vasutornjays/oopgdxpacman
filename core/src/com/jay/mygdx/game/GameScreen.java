@@ -11,25 +11,25 @@ import com.badlogic.gdx.math.Vector2;
 public class GameScreen extends ScreenAdapter {
 	
 	private PacmanGame pacmanGame;
-	private Texture pacmanImg;
 	private Pacman pacman;
+	World world;
+	private WorldRenderer worldRenderer;
 	 
     public GameScreen(PacmanGame pacmanGame) {
         this.pacmanGame = pacmanGame;
-        pacmanImg = new Texture("pacman.png");
-        pacman = new Pacman(100,100);
+        world = new World(pacmanGame);
+        worldRenderer = new WorldRenderer(pacmanGame,world);
+        pacman = world.getPacman();
     }
     
     @Override
     public void render(float delta) {
-    	Gdx.gl.glClearColor(0, 0, 0, 1);
+    	update(delta);
+    	 
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        update(delta);
-    	SpriteBatch batch = pacmanGame.batch;
-        batch.begin();
-        Vector2 pos = pacman.getPosition();
-        batch.draw(pacmanImg, pos.x, pos.y);
-        batch.end();
+ 
+        worldRenderer.render(delta);
     }
     
     private void update(float delta) {
