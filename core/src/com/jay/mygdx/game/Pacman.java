@@ -1,5 +1,8 @@
 package com.jay.mygdx.game;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 
 public class Pacman {
@@ -16,12 +19,14 @@ public class Pacman {
 	Maze maze;
 	private World world;
 	static int Score = 0;
+	private List<DotEattenListener> listeners;
     
     public Pacman(int x, int y,World world) {
         position = new Vector2(x,y);
         this.world = world;
         currentDirection = DIRECTION_STILL;
         nextDirection = DIRECTION_STILL;
+        listeners = new LinkedList<DotEattenListener>();
     }    
     
     public void setNextDirection(int dir) {
@@ -33,6 +38,10 @@ public class Pacman {
  
         return ((((int)position.x - blockSize/2) % blockSize) == 0) &&
                 ((((int)position.y - blockSize/2) % blockSize) == 0);
+    }
+    
+    public interface DotEattenListener {
+        void notifyDotEatten();			
     }
     
     private boolean canMoveInDirection(int dir) {
@@ -62,7 +71,7 @@ public class Pacman {
                 currentDirection = nextDirection;
                 if(maze.hasDotAt(getRow(), getColumn())){                	
                 	maze.removeDotAt(getRow(), getColumn());
-                	world.increaseScore();
+                	notifyDotEattenListeners();
                 }
             } else {
                 currentDirection = DIRECTION_STILL;    
@@ -83,6 +92,16 @@ public class Pacman {
         {0,1},
         {-1,0}
     };
+    
+    public void registerDotEattenListener(DotEattenListener l) {
+        listeners.add(l);
+    }
+ 
+    private void notifyDotEattenListeners() {
+        for(DotEattenListener l : listeners) {
+            l.notifyDotEatten();
+        }
+    }
     
 
 }
